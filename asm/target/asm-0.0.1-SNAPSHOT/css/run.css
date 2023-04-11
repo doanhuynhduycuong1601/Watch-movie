@@ -1,0 +1,79 @@
+.convenient-bar .left li>* {
+	color: white;
+}
+
+.convenient-bar .right li>* {
+	color: white;
+}
+
+.convenient-bar .right li>button:hover {
+	color: black;
+}
+
+.convenient-bar .right li>button:focus {
+	color: black;
+}
+
+.convenient-bar .below a {
+	font-size: 25px;
+	color: white;
+}
+
+.convenient-bar .below li {
+	margin-left: 45px;
+}
+
+iframe[name=page] {
+	width: 100%;
+	height: 300px;
+}
+
+a {
+	color: white;
+}
+
+.container  h1, h2, h3, div, label, a {
+	color: white;
+}
+
+.card {
+	border: 2px solid white;
+}
+
+.divBig {
+	position: relative;
+}
+
+.divBig a{
+	position: absolute;
+	display: block;
+}
+
+
+.divBig:hover img {
+	transition: 0.5s;
+	transition-delay: 0.3s;
+	opacity: 0.2;
+}
+
+
+
+.divBig .divButton {
+	position: absolute;
+	top: 40%;
+	left: 10%;
+	opacity: 0;
+	display: none;
+}
+
+.divBig:hover .divButton {
+  transition: 3s;
+  opacity: 1;
+  display: block;
+}
+
+
+#frmRe input{
+	margin: 0px
+}
+

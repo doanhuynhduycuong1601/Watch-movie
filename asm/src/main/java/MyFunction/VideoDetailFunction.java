@@ -84,14 +84,14 @@ public class VideoDetailFunction {
 		//lấy ra danh sách video từ cookie
 		List<CustomerLikeVideo> listCookie = CookieUtils.list(req, daoVideo,id);
 		//số lượng video thể hiện ra
-		int maxVideoShow = 8;
+		int maxVideoShow = 5;
 		//lấy ra danh sách id video để xuất ra các video còn lại. nếu List video từ cookie bé hơn max
 		List<Integer> listId = listVideoConLai(listCookie);
 		//add video đang xem
 		listId.add(id);
 		
 		//số lượng video còn lại
-		int quantityVideoConLai = 8 - listId.size();
+		int quantityVideoConLai = maxVideoShow - listId.size();
 		
 		//lấy ra video còn lại
 		List<CustomerLikeVideo> listConLai = daoVideo.videoDetailLikeListLast(Account.id(), listId, quantityVideoConLai);
