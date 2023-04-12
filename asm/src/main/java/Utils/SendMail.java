@@ -17,7 +17,7 @@ import jakarta.mail.internet.MimeMultipart;
 
 public class SendMail {
 	private static String email = "doanhuynhduycuong16011601@gmail.com";
-    private static String password = "ghhnobgajhmiathp";
+    private static String password = "qmqnzbwirzjvttiv";
 	private static Session truyCap() {
 
 	    String host = "smtp.gmail.com";
