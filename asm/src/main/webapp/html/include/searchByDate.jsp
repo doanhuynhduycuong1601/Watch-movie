@@ -3,7 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
 
-<div class="row mb-4">
+<div class="container">
+	<div class="row mb-4">
 	<c:url var="url" value="/videoByView/page/"></c:url>
 	<c:forEach var="list" items="${listVideo}">
 		<div class="col-3 mb-4">
@@ -66,6 +67,7 @@
 			</c:if>
 		</div>
 	</div>
+</div>
 </div>
 
 

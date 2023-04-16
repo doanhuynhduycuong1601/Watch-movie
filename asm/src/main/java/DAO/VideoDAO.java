@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import Utils.Jpa;
 import entity.CustomerLikeVideo;
@@ -279,9 +280,17 @@ private EntityManager em = Jpa.getEntityManager();
 //	}
 	
 	
-	public List<Video> selectAll(){
+	public List<Video> selectAll(int start, int max){
 //		String jpql = "SELECT DISTINCT v FROM Video v LEFT JOIN v.genres "
 //				+ "LEFT JOIN v.stars";
+		String jpql = "SELECT  v FROM Video v ";
+		TypedQuery<Video> query = em.createQuery(jpql, Video.class);
+		query.setFirstResult(start * max);
+		query.setMaxResults(max);
+		return query.getResultList();
+	}
+	
+	public List<Video> selectAllPage(){
 		String jpql = "SELECT  v FROM Video v ";
 		TypedQuery<Video> query = em.createQuery(jpql, Video.class);
 		return query.getResultList();

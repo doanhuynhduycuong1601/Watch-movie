@@ -8,12 +8,13 @@ import DAO.VideoDAO;
 import entity.Video;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import view.AllDAO;
 
 public class TKVideoFavor {
-	public static void videoFavor(HttpServletRequest req, HttpServletResponse resp, VideoDAO daoVideo) throws IOException {
+	public static void videoFavor(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String result = "";
 		
-		List<Video> v = daoVideo.videoHaveFavor(req.getParameter("favor").equals("true"));
+		List<Video> v = AllDAO.daoVideo.videoHaveFavor(req.getParameter("favor").equals("true"));
 		result = table(v);
 		resp.setContentType("text/plain");
 		resp.setCharacterEncoding("UTF-8");

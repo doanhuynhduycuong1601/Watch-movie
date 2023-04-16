@@ -12,10 +12,11 @@ import org.apache.commons.beanutils.converters.DateTimeConverter;
 import DAO.UserDAO;
 import entity.User;
 import jakarta.servlet.http.HttpServletRequest;
+import view.AllDAO;
 
 public class UpdateAccount {
-	public static User updateAccount(HttpServletRequest req, UserDAO daoUser) {
-		User s = daoUser.findById(req.getParameter("id"));
+	public static User updateAccount(HttpServletRequest req) {
+		User s = AllDAO.daoUser.findById(req.getParameter("id"));
 		if(s == null) {
 			return null;
 		}
@@ -27,7 +28,7 @@ public class UpdateAccount {
 			
 			BeanUtils.populate(s, req.getParameterMap());
 
-			daoUser.update(s);
+			AllDAO.daoUser.update(s);
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

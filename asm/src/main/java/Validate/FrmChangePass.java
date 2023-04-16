@@ -12,16 +12,17 @@ import entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import view.Account;
+import view.AllDAO;
 
 public class FrmChangePass {
-	public static void changepass(HttpServletRequest req, HttpServletResponse resp,UserDAO userdao) {
+	public static void changepass(HttpServletRequest req, HttpServletResponse resp) {
 		String current = req.getParameter("current");
 		String newPass = req.getParameter("newPass");
 		String confirm = req.getParameter("confirm");
 		if(checkFrmC(req,current,newPass,confirm)) {
 			if(checkCompare(req, current, newPass, confirm)) {	
 				Account.account.setPass(newPass);
-				userdao.update(Account.account);
+				AllDAO.daoUser.update(Account.account);
 				return;
 			}
 		}

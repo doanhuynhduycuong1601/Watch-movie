@@ -2,7 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
-<div class="d-flex">
+<div class="container">
+	<div class="d-flex">
 	<div class="p-2 flex-grow-1">
 		<h1 class="text-light">Mới đăng</h1>
 	</div>
@@ -113,6 +114,7 @@
 			</div>
 		</div>
 	</c:forEach>
+</div>
 </div>
 
 

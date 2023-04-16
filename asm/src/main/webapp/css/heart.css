@@ -20,6 +20,7 @@
 
 .heart-icon.white {
   z-index: 1;
+  background-color: #343a40;
 }
 
 .heart-icon.red {

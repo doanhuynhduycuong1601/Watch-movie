@@ -14,10 +14,11 @@ import Utils.Valid;
 import entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import view.AllDAO;
 
 public class FrmAdUpdate {
-	public static User update(HttpServletRequest req, HttpServletResponse resp, UserDAO userdao) {
-		User s = userdao.findById(req.getParameter("id"));
+	public static User update(HttpServletRequest req, HttpServletResponse resp) {
+		User s = AllDAO.daoUser.findById(req.getParameter("id"));
 		if(s == null) {
 			return null;
 		}
@@ -32,7 +33,7 @@ public class FrmAdUpdate {
 				dtc.setPattern("yyyy-MM-dd");
 				ConvertUtils.register(dtc, Date.class);
 				BeanUtils.populate(s, req.getParameterMap());
-				userdao.update(s);
+				AllDAO.daoUser.update(s);
 				return s;
 			}
 		} catch (IllegalAccessException | InvocationTargetException e) {

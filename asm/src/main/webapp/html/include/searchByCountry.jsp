@@ -4,7 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
 
 
-<div class="row mb-5">
+<div class="container">
+	<div class="row mb-5">
 	<h2>Country : ${nameCountry}</h2>
 </div>
 <div class="row mb-4">
@@ -72,6 +73,7 @@
 			</c:if>
 		</div>
 	</div>
+</div>
 </div>
 
 

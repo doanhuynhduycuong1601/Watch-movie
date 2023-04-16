@@ -122,7 +122,7 @@
 				</div>
 			</form>
 			<div class="col-6 offset-3">
-				<button onclick="update()" class="btn btn-primary">Login</button>
+				<button onclick="update()" class="btn btn-primary">Update</button>
 			</div>
 			<script>
 				function update() {

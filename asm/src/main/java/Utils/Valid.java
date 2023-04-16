@@ -129,6 +129,10 @@ public class Valid {
     public String reUser() {
         return "^[0-9a-zA-Z]{5,40}$";
     }
+    
+    public String reH = "((0?[1-9]h)|([1-9]\\d{2,4}h)){0,1}";
+	public String reM = "((0?[1-9]m)|([1-5]\\dm)|(60m)){0,1}";
+	public String reS = "((0?[1-9]s)|([1-5]\\ds)|(60s)){0,1}";
 
     public Map<String, String> importMapNumber() {
         Map<String, String> map = new HashMap<>();

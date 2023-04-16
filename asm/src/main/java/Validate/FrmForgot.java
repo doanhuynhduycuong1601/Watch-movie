@@ -13,9 +13,10 @@ import entity.User;
 import jakarta.persistence.NoResultException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import view.AllDAO;
 
 public class FrmForgot {
-	public static void forgot(HttpServletRequest req, HttpServletResponse resp,UserDAO daoUser) {
+	public static void forgot(HttpServletRequest req, HttpServletResponse resp) {
 		User s = new User();
 		try {
 			BeanUtils.populate(s, req.getParameterMap());
@@ -24,7 +25,7 @@ public class FrmForgot {
 			checkFrmF(req, s);
 			System.out.println("Check xong");
 			//check xem đúng tài khoản email trong database chưa
-			User us = daoUser.forgotPass(s.getId(), s.getEmail());
+			User us = AllDAO.daoUser.forgotPass(s.getId(), s.getEmail());
 
 			//gửi email
 			SendMail.sendCodeRegister(us.getEmail(), "Forgot pass", us.getPass());

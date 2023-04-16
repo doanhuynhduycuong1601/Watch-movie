@@ -11,9 +11,10 @@ import Utils.Valid;
 import entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import view.AllDAO;
 
 public class FrmLogin {
-	public static User login(HttpServletRequest req, HttpServletResponse resp,UserDAO userdao) {
+	public static User login(HttpServletRequest req, HttpServletResponse resp) {
 		User s = new User();
 		try {
 			BeanUtils.populate(s, req.getParameterMap());
@@ -21,7 +22,7 @@ public class FrmLogin {
 				req.setAttribute("btnLogin", "document.getElementById(\"btnLogin\").click();");
 				req.setAttribute("formLg", s);
 			}else {
-				User account = userdao.findById(s.getId());
+				User account = AllDAO.daoUser.findById(s.getId());
 				if(account != null) {
 					if(account.getPass().equals(s.getPass())) {
 						String remember = req.getParameter("remember");

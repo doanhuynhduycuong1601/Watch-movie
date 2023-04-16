@@ -9,6 +9,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import view.Account;
+import view.AllDAO;
 
 public class CookieUtils {
 	// Tạo và gửi cookie về client để lưu
@@ -34,7 +35,7 @@ public class CookieUtils {
 	}
 	
 	
-	public static List<CustomerLikeVideo> list(HttpServletRequest req, VideoDAO daoVideo, int id){
+	public static List<CustomerLikeVideo> list(HttpServletRequest req, int id){
 		Cookie[] cookies = req.getCookies();
 		List<Integer> list = new ArrayList<>();
 		if (cookies != null) {
@@ -44,6 +45,6 @@ public class CookieUtils {
 				}
 			}
 		}
-		return daoVideo.videoDetailLikeList(Account.id(), list, id);
+		return AllDAO.daoVideo.videoDetailLikeList(Account.id(), list, id);
 	}
 }

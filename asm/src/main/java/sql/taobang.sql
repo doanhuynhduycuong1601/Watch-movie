@@ -135,7 +135,17 @@ WHERE year(f.LikeDate) = @Year
 GROUP BY v.Title
 END
 
+create table link(
+	id int identity(1,1) primary key,
+	names nvarchar(100),
+	img nvarchar(100),
+	linkURL nvarchar(200),
+	dates date,
+	times nvarchar(100)
+)
+
 select * from favorities
+select * from link
 
 
 
@@ -145,3 +155,4 @@ insert into genre(names) values ('genre 1')
 
 
 --truncate table favorities
+

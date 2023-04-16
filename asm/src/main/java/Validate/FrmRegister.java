@@ -12,9 +12,10 @@ import Utils.Valid;
 import entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import view.AllDAO;
 
 public class FrmRegister {
-	public static void register(HttpServletRequest req, HttpServletResponse resp,UserDAO userdao) {
+	public static void register(HttpServletRequest req, HttpServletResponse resp) {
 		User s = new User();
 		try {
 			BeanUtils.populate(s, req.getParameterMap());
@@ -23,7 +24,7 @@ public class FrmRegister {
 				req.setAttribute("formRe", s);
 				code = "";
 			}else {
-				if(userdao.findById(s.getId()) == null) {
+				if(AllDAO.daoUser.findById(s.getId()) == null) {
 					if(code.isEmpty()) {
 						code = getranDomCode();
 						SendMail.sendCodeRegister(s.getEmail(), "Code register", code);
@@ -34,7 +35,7 @@ public class FrmRegister {
 						String inputCode = req.getParameter("macode");
 						if(inputCode != null && inputCode.equals(code)) {
 							req.setAttribute("aRegister", "alert('Register thành công')");
-							userdao.create(s);
+							AllDAO.daoUser.create(s);
 						}else {
 							req.setAttribute("MaCode", inputCode);
 							req.setAttribute("formRe", s);

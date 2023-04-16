@@ -63,12 +63,32 @@
 				<nav class="navbar navbar-expand-lg">
 					<div class="collapse navbar-collapse" id="navbarNav">
 						<ul class="navbar-nav">
-
+							<fmt:setLocale value="${sessionScope.lang}" scope="request"/>
+							<fmt:setBundle basename="nav" scope="request"/>
+							<li class="nav-item dropdown">
+									<button style="border: none; padding: 8px"
+										class="btn btn-outline-light dropdown-toggle" type="button"
+										data-bs-toggle="dropdown" aria-expanded="false">English</button>
+									<div class="dropdown-menu container">
+										<div class="list-group">
+											<a href="?lang=vi"
+												class="list-group-item list-group-item-action">Tiếng việt
+											</a> 
+											<a href="?lang=en"
+												class="list-group-item list-group-item-action">English
+											</a>
+										</div>
+									</div>
+								</li>
+								
+							
 							<c:if test="${account != null && account.admins}">
 								<li class="nav-item dropdown">
 									<button style="border: none; padding: 8px"
 										class="btn btn-outline-light dropdown-toggle" type="button"
-										data-bs-toggle="dropdown" aria-expanded="false">Admin</button>
+										data-bs-toggle="dropdown" aria-expanded="false">
+											<fmt:message key="nav.admin"></fmt:message>
+										</button>
 									<div class="dropdown-menu container">
 										<div class="list-group">
 											<a href="${url}genre/view"
@@ -79,6 +99,8 @@
 												class="list-group-item list-group-item-action">Account</a> <a
 												href="${url}thong_ke/view"
 												class="list-group-item list-group-item-action">Thống kê</a>
+												<a href="${url}advertising/view"
+												class="list-group-item list-group-item-action">Advertising</a>
 										</div>
 									</div>
 								</li>
@@ -88,7 +110,7 @@
 								<li class="nav-item dropdown">
 									<button style="border: none; padding: 8px"
 										class="btn btn-outline-light dropdown-toggle" type="button"
-										data-bs-toggle="dropdown" aria-expanded="false">Account</button>
+										data-bs-toggle="dropdown" aria-expanded="false"> <fmt:message key="nav.account"></fmt:message> </button>
 									<div class="dropdown-menu container">
 										<div class="list-group">
 											<a id="aChangePass" href="#"
@@ -109,7 +131,7 @@
 
 							<c:if test="${account!=null}">
 								<li class="nav-item"><a href="/asm/myfavorities/1"
-									class="nav-link">My favorities</a></li>
+									class="nav-link"> <fmt:message key="nav.favorite"></fmt:message> </a></li>
 							</c:if>
 
 							<c:if test="${account==null}">
@@ -118,7 +140,8 @@
 									<button id="btnLogin" style="border: none;" type="button"
 										class="btn btn-outline-light nav-link" data-bs-toggle="modal"
 										href="#login" role="button">
-										<i style="margin-right: 8px;" class="fa-solid fa-user"></i>Login
+										<i style="margin-right: 8px;" class="fa-solid fa-user"></i>
+										<fmt:message key="nav.login"></fmt:message>
 									</button>
 								</li>
 							</c:if>

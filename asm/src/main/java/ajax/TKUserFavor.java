@@ -11,9 +11,10 @@ import entity.User;
 import entity.Video;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import view.AllDAO;
 
 public class TKUserFavor {
-	public static void search(HttpServletRequest req, HttpServletResponse resp, UserDAO daoUser, FavoriteDAO daoFavorite) throws IOException {
+	public static void search(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String idUser = req.getParameter("value");
 
 		String result = "";
@@ -22,7 +23,7 @@ public class TKUserFavor {
 		}
 
 //		lab6 cau 2
-		User user = daoUser.findById(idUser);
+		User user = AllDAO.daoUser.findById(idUser);
 
 		if (user == null) {
 			result = "<h2>Không tìm thấy</h2>";
@@ -45,7 +46,7 @@ public class TKUserFavor {
 		resp.getWriter().write(result);
 	}
 
-	public static void searchVideoFavor(HttpServletRequest req, HttpServletResponse resp, FavoriteDAO daoFavor) throws IOException {
+	public static void searchVideoFavor(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String title = req.getParameter("value");
 
 		String result = "";
@@ -55,7 +56,7 @@ public class TKUserFavor {
 		
 		//cái dòng dưới đây đang sai sai
 //		List<Favorite> f = daoFavor.searchVideoFavorByName(title);
-		List<Video> v = daoFavor.searchVideoFavorByName2(title);
+		List<Video> v = AllDAO.daoFavorite.searchVideoFavorByName2(title);
 		List<Favorite> f = listFavorAo(v);
 		System.out.println(f.size());
 		

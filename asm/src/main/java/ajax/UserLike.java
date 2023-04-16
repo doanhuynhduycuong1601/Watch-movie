@@ -6,18 +6,19 @@ import entity.User;
 import entity.Video;
 import jakarta.persistence.NoResultException;
 import jakarta.servlet.http.HttpServletRequest;
+import view.AllDAO;
 
 public class UserLike {
-	public static void like(HttpServletRequest req, String user, FavoriteDAO daoFavor) {
+	public static void like(HttpServletRequest req, String user) {
 			int id = Integer.parseInt(req.getParameter("value"));
 			boolean like = req.getParameter("like").equals("true");
 			try {
-				Favorite f = daoFavor.findIdUserIdVideo(user, id);
+				Favorite f = AllDAO.daoFavorite.findIdUserIdVideo(user, id);
 				f.setLikes(like);
-				daoFavor.update(f);
+				AllDAO.daoFavorite.update(f);
 			}catch(NoResultException n) {
 				Favorite f = new Favorite(new User(user), new Video(id), like);
-				daoFavor.create(f);
+				AllDAO.daoFavorite.create(f);
 			}
 	}
 }

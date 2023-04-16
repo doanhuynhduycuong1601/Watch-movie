@@ -11,13 +11,14 @@ import entity.Genre;
 import entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import view.AllDAO;
 
 public class ManagerGenreAjax {
-	public static void genre(HttpServletRequest req, HttpServletResponse resp, GenreDAO daoGenre) throws IOException {
+	public static void genre(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		
 		String result = "";
 		if(req.getParameter("edit") != null) {
-			Genre genre = daoGenre.getReference(Integer.parseInt(req.getParameter("value")));
+			Genre genre = AllDAO.daoGenre.getReference(Integer.parseInt(req.getParameter("value")));
 			result += "<input name=\"id\" hidden value=\""+genre.getId()+"\">";
 			result += form(genre, buttonEdit());
 		}else {

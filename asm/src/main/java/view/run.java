@@ -2,29 +2,18 @@
 package view;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import org.apache.commons.beanutils.BeanUtils;
-
-import DAO.CountryDAO;
-import DAO.DAO;
-import DAO.DirectorDAO;
-import DAO.FavoriteDAO;
-import DAO.GenreDAO;
-import DAO.StarDAO;
-import DAO.UserDAO;
-import DAO.VideoDAO;
+import MyFunction.ManagerAdvertising;
 import MyFunction.ManagerGenre;
 import MyFunction.ManagerVideo;
 import MyFunction.UpdateAccount;
 import MyFunction.VideoDetailFunction;
 import MyFunction.VideoPage;
-import Utils.CookieUtils;
+import Utils.RRSharer;
+import Utils.XCookie;
 import Validate.FrmAdUpdate;
 import Validate.FrmChangePass;
 import Validate.FrmForgot;
@@ -35,14 +24,13 @@ import ajax.ManagerGenreAjax;
 import ajax.TKUserFavor;
 import ajax.TKVideoFavor;
 import ajax.UserLike;
+import entity.Advertising;
 import entity.Country;
 import entity.CustomerLikeVideo;
-import entity.Favorite;
-import entity.Star;
+import entity.Genre;
 import entity.User;
 import entity.Video;
-import entity.VideoLinks;
-import entity.VideoLinksDetail;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -51,201 +39,252 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @MultipartConfig()
-@WebServlet({"/home", "/manager/account/*", "/manager/video/*", "/manager/genre/*", "/manager/thong_ke/*",
-		"/account/*", "/detailVideo/*", "/search/*", "/videoByDate/page/*", "/videoByView/page/*",
-		"/detailVideoView/*", "/myfavorities/*"})
+@WebServlet({ "/home", "/manager/account/*", "/manager/video/*", "/manager/genre/*", "/manager/thong_ke/*",
+		"/account/*", "/detailVideo/*", "/search/*", "/videoByDate/page/*", "/videoByView/page/*", "/detailVideoView/*",
+		"/myfavorities/*","/manager/advertising/*"})
 public class run extends HttpServlet {
-	CountryDAO daoCountry = new CountryDAO();
-	FavoriteDAO daoFavorite = new FavoriteDAO();
-	StarDAO daoStar = new StarDAO();
-	UserDAO daoUser = new UserDAO();
-	VideoDAO daoVideo = new VideoDAO();
-	DirectorDAO daoDirector = new DirectorDAO();
-	GenreDAO daoGenre = new GenreDAO();
-
 
 	ManagerVideo managerVideo = new ManagerVideo();
-	private String page = "/index.jsp";
+	private String page = "/html/include/video.jsp";
+	List<Country> listCountry = AllDAO.daoCountry.findAll();
+	List<Genre> listGenre = AllDAO.daoGenre.selectAll();
+
+	@Override
+	public void init() throws ServletException {
+		reStart();
+	}
 
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// ajax
+		RRSharer.add(req, resp);
+
 		if (req.getParameter("ajax") != null) {
 			if (req.getParameter("heart") != null) {
-				UserLike.like(req, Account.account.getId(), daoFavorite);
+				UserLike.like(req, Account.account.getId());
 			} else if (req.getParameter("tkSearchFavor") != null) {
 				// lab6 cau 3 and cau 2
-				TKUserFavor.search(req, resp, daoUser, daoFavorite);
+				TKUserFavor.search(req, resp);
 			} else if (req.getParameter("managerGenre") != null) {
-				ManagerGenreAjax.genre(req, resp, daoGenre);
+				ManagerGenreAjax.genre(req, resp);
 			} else if (req.getParameter("tkSearchVideoFavor") != null) {
 				// lab6 cau 3 and cau 2
-				TKUserFavor.searchVideoFavor(req, resp, daoFavorite);
+				TKUserFavor.searchVideoFavor(req, resp);
 			} else if (req.getParameter("managerCountryUpdate") != null) {
-				ManagerCountry.countryUpdate(req, resp, daoCountry);
+				ManagerCountry.countryUpdate(req, resp);
 			} else if (req.getParameter("managerCountryCreate") != null) {
-				ManagerCountry.countryCreate(req, resp, daoCountry);
+				ManagerCountry.countryCreate(req, resp);
 			} else if (req.getParameter("tkVideoFavor") != null) {
-				TKVideoFavor.videoFavor(req, resp, daoVideo);
+				TKVideoFavor.videoFavor(req, resp);
+			} else if (req.getParameter("tangtang") != null) {
+				String id = req.getParameter("id");
+				AllDAO.daoVideo.updateViewVideo(Integer.valueOf(id));
 			}
 			return;
 		}
 
 		String uri = req.getRequestURI();
 		if (uri.contains("/home")) {
-			if(req.getParameter("logout") != null) {
+			if (req.getParameter("logout") != null) {
 				Account.account = null;
 			}
-			page = "/index.jsp";
+			page = "/html/include/video.jsp";
 		}
 
 		// search
 		if (uri.contains("/search/")) {
 			if (uri.contains("genre")) {
-				VideoPage.searchVideoByGenre(req, daoVideo, daoGenre);
-				page = "/html/searchByGenrePage.jsp";
-			}else if(uri.contains("country")) {
-				VideoPage.searchVideoByCountry(req, daoVideo, daoCountry);
-				page = "/html/searchByCountryPage.jsp";
-			}else if(uri.contains("name")) {
-				VideoPage.searchVideoByName(req, daoVideo);
-				page = "/html/searchByNamePage.jsp";
+				VideoPage.searchVideoByGenre(req);
+				page = "/html/include/searchByGenre.jsp";
+			} else if (uri.contains("country")) {
+				VideoPage.searchVideoByCountry(req);
+				page = "/html/include/searchByCountry.jsp";
+			} else if (uri.contains("name")) {
+				VideoPage.searchVideoByName(req);
+				page = "/html/include/searchByName.jsp";
 			}
 		}
 
 		// video by date
 		if (uri.contains("videoByDate")) {
-			VideoPage.orderbyDateVideo(req, daoVideo);
-			page = "/html/searchByDatePage.jsp";
+			VideoPage.orderbyDateVideo(req);
+			page = "/html/include/searchByDate.jsp";
 		}
 
-		
-		
 		// video by view
 		if (uri.contains("videoByView")) {
-			VideoPage.orderbyViewVideo(req, daoVideo);
-			page = "/html/searchByDatePage.jsp";
+			VideoPage.orderbyViewVideo(req);
+			page = "/html/include/searchByDate.jsp";
 		}
-		
-		//video by my favorite
-		if(uri.contains("myfavorities")) {
-			VideoPage.videoByMyFavor(req, daoVideo);
-			page = "/html/videoMyFavorPage.jsp";
+
+		// video by my favorite
+		if (uri.contains("myfavorities")) {
+			VideoPage.videoByMyFavor(req);
+			page = "/html/include/videoMyFavor.jsp";
 		}
 
 		// don't login
 		if (Account.account == null) {
 			User uAo = new User();
-			uAo.setId(CookieUtils.get("user", req));
-			uAo.setPass(CookieUtils.get("pass", req));
+			uAo.setId(XCookie.get("user"));
+			uAo.setPass(XCookie.get("pass"));
 			req.setAttribute("formLg", uAo);
-			req.setAttribute("rememberLogin", CookieUtils.get("rememberLogin", req));
+			req.setAttribute("rememberLogin", XCookie.get("rememberLogin"));
 		}
 
 		// Account
 		if (uri.contains("/account/register")) {
-			FrmRegister.register(req, resp, daoUser);
-			page = "/index.jsp";
+			FrmRegister.register(req, resp);
+			page = "/html/include/video.jsp";
 		} else if (uri.contains("/account/login")) {
-			Account.account = FrmLogin.login(req, resp, daoUser);
-			page = "/index.jsp";
+			if (!req.getMethod().equals("GET")) {
+				Account.account = FrmLogin.login(req, resp);
+				page = "/html/include/video.jsp";
+			}
 		} else if (uri.contains("/account/update")) {
 			if (uri.contains("/account/update/update")) {
-				Account.account = UpdateAccount.updateAccount(req, daoUser);
+				Account.account = UpdateAccount.updateAccount(req);
 			}
 			req.setAttribute("adUpAc", Account.account);
-			page = "/html/updateInforPage.jsp";
-		}else if(uri.contains("/account/changepass")) {
-			FrmChangePass.changepass(req, resp, daoUser);
-			page = "/index.jsp";
-		}else if(uri.contains("account/forgot")) {
-			FrmForgot.forgot(req, resp, daoUser);
-			page = "/index.jsp";
+			page = "/html/include/updateInfor.jsp";
+		} else if (uri.contains("/account/changepass")) {
+			FrmChangePass.changepass(req, resp);
+			page = "/html/include/video.jsp";
+		} else if (uri.contains("account/forgot")) {
+			FrmForgot.forgot(req, resp);
+			page = "/html/include/video.jsp";
 		}
 
 		// Xem video detail
 		if (uri.contains("/detailVideo/")) {
-			VideoDetailFunction.videoDetail(req, daoVideo, daoFavorite);
-			page = "/html/detailVideoPage.jsp";
+			VideoDetailFunction.videoDetail(req);
+			page = "/html/include/detailVideo.jsp";
 		} else if (uri.contains("detailVideoView")) {
-			VideoDetailFunction.videDetailView(req, resp, daoVideo, daoFavorite);
-			page = "/html/detailVideoViewPage.jsp";
+			VideoDetailFunction.videDetailView(req, resp);
+
+			page = "/html/include/detailVideoView.jsp";
 		}
 
 		// Admin Authorize
 		if (uri.contains("/manager/account")) {
 			if (uri.contains("update")) {
-				page = "/html/adminAccountPage.jsp";
-				FrmAdUpdate.update(req, resp, daoUser);
+				page = "/html/include/adminAccount.jsp";
+				FrmAdUpdate.update(req, resp);
 			} else if (uri.contains("edit")) {
 				String user = uri.substring(uri.lastIndexOf("/") + 1);
-				req.setAttribute("adUpAc", daoUser.findById(user));
+				req.setAttribute("adUpAc", AllDAO.daoUser.findById(user));
 				req.setAttribute("adUpdate", "document.getElementById(\"adUpdate\").click();");
 			}
-			req.setAttribute("listUser", daoUser.selectAllUser());
-			page = "/html/adminAccountPage.jsp";
+			req.setAttribute("listUser", AllDAO.daoUser.selectAllUser());
+			page = "/html/include/adminAccount.jsp";
 
 		} else if (uri.contains("/manager/video")) {
 			if (uri.contains("update")) {
-				managerVideo.createVideo(req, daoVideo, daoGenre, daoStar);
+				managerVideo.createVideo(req);
 			} else if (uri.contains("create")) {
-				managerVideo.createVideo(req, daoVideo, daoGenre, daoStar);
+				managerVideo.createVideo(req);
 			} else if (uri.contains("edit")) {
 				int id = Integer.parseInt(uri.substring(uri.lastIndexOf("/") + 1));
-				req.setAttribute("editVideo", daoVideo.videoDetail(id));
+				req.getSession().setAttribute("managerPageVideo", 1);
+				Video v = AllDAO.daoVideo.videoDetail(id);
+				req.setAttribute("editVideo", v);
+				req.setAttribute("editVideoGenre", managerVideo.edit(v.getGenres()));
+				;
 				req.setAttribute("clickEdit", "document.getElementById('editVideo').click()");
 			} else if (uri.contains("reset")) {
-				req.setAttribute("editVideo", new Video(0));
+				req.setAttribute("editVideo", new Video(0,"chonanh.png"));
 				req.setAttribute("clickEdit", "document.getElementById('editVideo').click()");
 			} else if (uri.contains("remove")) {
-				managerVideo.removeVideo(req, daoVideo);
+				managerVideo.removeVideo(req);
+			} else if (uri.contains("page")) {
+				int numPage = Integer.valueOf(uri.substring(uri.lastIndexOf("/")+1));
+				req.getSession().setAttribute("managerPageVideo", numPage);
+			} else if(uri.contains("view")) {
+				req.getSession().setAttribute("managerPageVideo", 1);
+				req.setAttribute("editVideo", new Video(0,"chonanh.png"));
 			}
-			page = "/html/adminVideoPage.jsp";
-			req.setAttribute("listVideo", daoVideo.selectAll());
+			page = "/html/include/adminVideo.jsp";
+			int num = numSession("managerPageVideo"); 
+			int max = 8;
+			req.setAttribute("listVideo", AllDAO.daoVideo.selectAll(num - 1, max));
+			
+			//
+			int quantityVideo = AllDAO.daoVideo.selectAllPage().size();
+			int pageLast = quantityVideo / 8;
+			if(quantityVideo % max != 0) {
+				pageLast++;
+			}
+			req.setAttribute("pageLast", pageLast);
+			req.setAttribute("pageCurrent", num);
 
 		} else if (uri.contains("/manager/thong_ke")) {
-			page = "/html/tkPage.jsp";
-			req.setAttribute("favorCount", daoFavorite.listReport());
-			req.setAttribute("videoHaveFavor", daoVideo.videoHaveFavor(true));
+			page = "/html/include/tk.jsp";
+			req.setAttribute("favorCount", AllDAO.daoFavorite.listReport());
+			req.setAttribute("videoHaveFavor", AllDAO.daoVideo.videoHaveFavor(true));
 		} else if (uri.contains("/manager/genre")) {
 			if (uri.contains("updateGenre") || uri.contains("createGenre")) {
-				ManagerGenre.updateGenre(req, daoGenre);
+				ManagerGenre.updateGenre(req);
 			} else if (uri.contains("deleteGenre")) {
-				ManagerGenre.removeGenre(req, daoGenre);
+				ManagerGenre.removeGenre(req);
 			}
-			req.setAttribute("genreDontVideo", daoGenre.selectGenreDontVideo());
-			req.setAttribute("genreAdmin", daoGenre.selectAmin());
-			page = "/html/adminGenrePage.jsp";
+			req.setAttribute("genreDontVideo", AllDAO.daoGenre.selectGenreDontVideo());
+			req.setAttribute("genreAdmin", AllDAO.daoGenre.selectAmin());
+			page = "/html/include/adminGenre.jsp";
+		}else if(uri.contains("/manager/advertising")) {
+			if(uri.contains("create") || uri.contains("update")) {
+				ManagerAdvertising.add(req);
+				req.getSession().setAttribute("listAdver", AllDAO.daoAdver.selectAll(""));
+			}else if(uri.contains("view")) {
+				req.getSession().setAttribute("listAdver", AllDAO.daoAdver.selectAll(""));
+				req.setAttribute("editLink", new Advertising(0,"chonanh.png"));
+			}else if(uri.contains("edit")) {
+				int id = Integer.valueOf(uri.substring(uri.lastIndexOf("/")+1));
+				req.setAttribute("editLink", AllDAO.daoAdver.findById(id));
+			}else if(uri.contains("reset")) {
+				req.setAttribute("editLink", new Advertising(0,"chonanh.png"));
+			}else if(uri.contains("remove")) {
+				ManagerAdvertising.remove(req);
+				req.getSession().setAttribute("listAdver", AllDAO.daoAdver.selectAll(""));
+			}
+			page = "/html/include/adminAdvertising.jsp";
 		}
 
 		// Page
-		if (page.equals("/index.jsp")) {
+		if (page.equals("/html/include/video.jsp")) {
 			String idUser = Account.id();
-			List<CustomerLikeVideo> list = daoVideo.listVieoDateDecrease(idUser, 8, 0);
-			List<CustomerLikeVideo> listVideoDecrease = daoVideo.listVieoViewDecrease(idUser, 8, 0);
+			List<CustomerLikeVideo> list = AllDAO.daoVideo.listVieoDateDecrease(idUser, 8, 0);
+			List<CustomerLikeVideo> listVideoDecrease = AllDAO.daoVideo.listVieoViewDecrease(idUser, 8, 0);
 			req.setAttribute("listVideo", list);
 			req.setAttribute("listVideoViewDecrease", listVideoDecrease);
 		}
 
 		req.setAttribute("urlAjax", req.getRequestURL());
-		req.setAttribute("director", daoDirector.selectAll());
-		req.setAttribute("country", daoCountry.findAll());
+		req.setAttribute("country", listCountry);
 		req.setAttribute("account", Account.account);
-		req.setAttribute("star", daoStar.selectAll());
-		req.setAttribute("genre", daoGenre.selectAll());
-		req.getRequestDispatcher(page).forward(req, resp);
+		req.setAttribute("genre", listGenre);
+
+		RRSharer.remove();
+
+		req.setAttribute("view", page);
+		req.getRequestDispatcher("/index.jsp").forward(req, resp);
 	}
-	
-	
-//	private List<VideoLinksDetail> list(List<VideoLinks> list){
-//		List<VideoLinksDetail> ao = new ArrayList<>();
-//		int num = 1;
-//		for (VideoLinks l : list) {
-//			ao.add(new VideoLinksDetail(num, l.getUrlVideo()));
-//			num++;
-//		}
-//		return ao;
-//	}
-	
-	
+
+	public void reStart() {
+		Timer timer = new Timer();
+		TimerTask task = new TimerTask() {
+			public void run() {
+				listCountry = AllDAO.daoCountry.findAll();
+				listGenre = AllDAO.daoGenre.selectAll();
+				
+			}
+		};
+		// Lên lịch cho tác vụ được thực hiện định kỳ
+		timer.scheduleAtFixedRate(task, 0, 50000); // Lặp lại sau mỗi 5 giây
+	}
+
+	private int numSession(String name) {
+		return (int)RRSharer.request().getSession().getAttribute(name);
+	}
+
+
 }

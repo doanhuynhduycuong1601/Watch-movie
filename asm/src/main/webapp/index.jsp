@@ -23,7 +23,7 @@
 		<%@ include file="html/include/fixed.jsp"%>
 	</div>
 
-	<%@ include file="html/include/video.jsp"%>
+	<jsp:include page="${view}"></jsp:include>
 
 	<c:if test="${account == null}">
 		<%@ include file="html/include/login.jsp"%>
@@ -46,6 +46,9 @@
 			${aRegister}
 			${aChangePass}
 			${aForgot}
+			${clickEdit}
+			${linkOne}
+			${adUpdate}
 		}
 	</script>
 	<script

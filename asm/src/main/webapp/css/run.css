@@ -77,3 +77,29 @@ a {
 	margin: 0px
 }
 
+
+
+.move-up {
+  position: fixed;
+  bottom: -100px;
+  right: 25%;
+  animation: move-up 2s ease-in-out forwards;
+}
+
+@keyframes move-up {
+  from { bottom: -100px; } /* vị trí ban đầu của phần tử */
+  to { bottom: 0; } /* vị trí cuối cùng của phần tử */
+}
+
+
+.move-up-btn{
+	position: relative;
+	height: 120px;
+}
+
+.move-up-btn button{
+position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}

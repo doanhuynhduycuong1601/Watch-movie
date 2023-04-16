@@ -118,6 +118,7 @@ public class Video {
 		super();
 		this.idVideo = idVideo;
 	}
+	
 
 	public void addGenre(Genre genre) {
 		genres.add(genre);
@@ -133,6 +134,53 @@ public class Video {
 
 	public void removeStar(Star star) {
 		stars.remove(star);
+	}
+	
+	public int h() {
+		return Integer.valueOf(times.substring(0, times.indexOf("h"))) * 3600;
+	}
+	
+	public int m() {
+		int m = 0;
+		try {
+			m = Integer.valueOf(times.substring(times.lastIndexOf("m")-2, times.lastIndexOf("m"))) * 60; 
+		}catch(Exception e) {
+			m = Integer.valueOf(times.substring(times.lastIndexOf("m")-1, times.lastIndexOf("m"))) * 60;
+		}
+		return m;
+	}
+	
+	public int s() {
+		int s = 0;
+		try {
+			s = Integer.valueOf(times.substring(times.lastIndexOf("s")-2, times.lastIndexOf("s")));
+		}catch(Exception e) {
+			s = Integer.valueOf(times.substring(times.lastIndexOf("s")-1, times.lastIndexOf("s")));
+		}
+		return s;
+	}
+	
+	public int alltime() {
+		int ao = 0;
+		if(times.contains("h")) {
+			ao += h();
+			System.out.println("h : "+h());
+		}
+		if(times.contains("m")) {
+			ao += m();
+			System.out.println("m : "+m());
+		}
+		if(times.contains("s")) {
+			ao += s();
+			System.out.println("s :" +s());
+		}
+		return ao > 0 ? (int)Math.ceil(ao*80/100) : ao;
+	}
+
+	public Video(int idVideo, String poster) {
+		super();
+		this.idVideo = idVideo;
+		this.poster = poster;
 	}
 
 }
